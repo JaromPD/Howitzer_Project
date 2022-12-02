@@ -8,6 +8,21 @@ Projectile::Projectile() :
 	radius(154.89 / 2) // Default radius of a M795 155mm shell.
 {
 	// Default constructor
+	for (int i = 0; i < 20; i++)
+	{
+		pvt pvt;
+		cout << "1" << endl;
+		flightPath.push_back(pvt);
+		cout << "2" << endl;
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		cout << "3" << endl;
+		flightPath[i].p.setPixelsX((double)i * 2.0);
+		flightPath[i].p.setPixelsY(500 / 1.5);
+		cout << "4" << endl;
+	}
 }
 
 void Projectile::reset()
@@ -59,6 +74,16 @@ void Projectile::advance(double interval)
 
 void Projectile::draw(ogstream& gout)
 {
+	for (int i = 0; i < 20; i++)
+	{
+		// this bullet is moving left at 1 pixel per frame
+		double x = flightPath[i].p.getPixelsX();
+		x -= 1.0;
+		if (x < 0)
+			x = 500;
+		flightPath[i].p.setPixelsX(x);
+	}
+
 	for (int i = 0; i < 20; i++)
 	{
 		gout.drawProjectile(flightPath[i].p, 0.5 * (double)i);

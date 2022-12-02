@@ -34,7 +34,7 @@ class Projectile
 
 		double mass;
 		double radius;
-		vector<pvt> flightPath;	
+		vector<pvt> flightPath;
 		
 };
 
