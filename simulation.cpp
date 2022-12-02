@@ -1,4 +1,6 @@
+#include <iostream>
 #include "simulation.h"
+using namespace std;
 
 Simulation::Simulation(Position ptUpperRight) :
 	ptUpperRight(ptUpperRight),
@@ -8,6 +10,15 @@ Simulation::Simulation(Position ptUpperRight) :
 	ground.reset(howitzer.getPosition());
 }
 
+void Simulation::advance()
+{
+	simTime += interval;
+	if (projectile.flying())
+	{
+		projectile.advance(interval);
+	}
+}
+
 void Simulation::reset()
 {
 
@@ -15,7 +26,8 @@ void Simulation::reset()
 
 void Simulation::fire()
 {
-	//projectile.fire(howitzer.getPosition(), simTime, howitzer.)
+	cout << "***" << howitzer.getMuzzleVelocity().getSpeed() << "***";
+	projectile.fire(howitzer.getPosition(), simTime, howitzer.getMuzzleVelocity().getDirection(), howitzer.getMuzzleVelocity());
 }
 
 void Simulation::display()
@@ -24,7 +36,11 @@ void Simulation::display()
 
 	ground.draw(gout);
 	howitzer.draw(gout, simTime);
-	projectile.draw(gout);
+	
+	if (projectile.flying())
+	{
+		projectile.draw(gout);
+	}
 
 	gout.setf(ios::fixed | ios::showpoint);
 	gout.precision(1);

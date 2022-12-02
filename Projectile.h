@@ -1,5 +1,6 @@
  #pragma once
 #include <vector>
+#include <string>
 #include "velocity.h"
 #include "uiDraw.h"
 using namespace std;
@@ -11,7 +12,7 @@ class Projectile
 		Projectile();
 		
 		void reset();
-		void fire(double pos, double time, double angle, double vel);
+		void fire(Position pos, double time, Direction angle, Velocity vel);
 		void advance(double time);
 		void draw(ogstream& gout);
 		bool flying();
@@ -34,6 +35,7 @@ class Projectile
 
 		double mass;
 		double radius;
+		string status;
 		vector<pvt> flightPath;
 		
 };

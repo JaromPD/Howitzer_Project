@@ -5,24 +5,20 @@
 
 Projectile::Projectile() :
 	mass(46.7), // Default mass of a M795 155mm shell.
-	radius(154.89 / 2) // Default radius of a M795 155mm shell.
+	radius(154.89 / 2), // Default radius of a M795 155mm shell.
+	status("live")
 {
 	// Default constructor
-	for (int i = 0; i < 20; i++)
+	// Make the list of 20 pvts.
+
+	for (int i = 0; i < 1; i++)
 	{
 		pvt pvt;
-		cout << "1" << endl;
+		pvt.p.setPixelsX((double)i * 2.0);
+		pvt.p.setPixelsY(700 / 1.5);
 		flightPath.push_back(pvt);
-		cout << "2" << endl;
 	}
 
-	for (int i = 0; i < 20; i++)
-	{
-		cout << "3" << endl;
-		flightPath[i].p.setPixelsX((double)i * 2.0);
-		flightPath[i].p.setPixelsY(500 / 1.5);
-		cout << "4" << endl;
-	}
 }
 
 void Projectile::reset()
@@ -30,18 +26,49 @@ void Projectile::reset()
 
 }
 
-void Projectile::fire(double pos, double time, double angle, double vel)
+void Projectile::fire(Position pos, double time, Direction angle, Velocity vel)
 {
-	
+	status = "flying";
+
+	// Initial conditions are set.
+
+	for (int i = 0; i < 1; i++)
+	{
+		flightPath[i].p.setPixelsX(pos.getPixelsX());
+		flightPath[i].p.setPixelsY(pos.getPixelsY());
+		flightPath[i].v.setDirection(angle);
+		flightPath[i].v.setDxDy(vel.getDX(), vel.getDY());
+		cout << vel.getDX() << " | " << vel.getDY();
+	}
+
 }
 
 void Projectile::advance(double interval)
 {
+
+	// All of the pvts are updated with physics.
+	// (This makes them move pos)
+
+	for (int i = 0; i < 1; i++)
+	{
+		Velocity currVel = flightPath[i].v;
+		Position currPos = flightPath[i].p;
+		double currTime = flightPath[i].t;
+
+		double y = currPos.getPixelsY();
+		y += currVel.getDY() / interval;
+
+		double x = currPos.getPixelsX();
+		x += currVel.getDX() / interval;
+		flightPath[i].p.setPixelsY(y);
+		flightPath[i].p.setPixelsX(x);
+	}
+
 	/*******************
 	 * WORK IN PROGRESS	
 	 *******************/
 	
-	
+	/*
 	pvt pvt = flightPath.back();
 	double speed = pvt.v.getSpeed();
 	double altitude = pvt.p.getMetersY();
@@ -69,37 +96,25 @@ void Projectile::advance(double interval)
 
 	// ADD IT TO THE BACK OF THE FLIGHT PATH
 	flightPath.push_back(pvt);
-
+	*/
 }
 
 void Projectile::draw(ogstream& gout)
 {
-	for (int i = 0; i < 20; i++)
-	{
-		// this bullet is moving left at 1 pixel per frame
-		double x = flightPath[i].p.getPixelsX();
-		x -= 1.0;
-		if (x < 0)
-			x = 500;
-		flightPath[i].p.setPixelsX(x);
-	}
+	// All pvts are displayed.
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		gout.drawProjectile(flightPath[i].p, 0.5 * (double)i);
 	}
 }
 
 bool Projectile::flying()
-{
-	
-	if (getAltitude() <= 0) {
-		return false;
-	}
-	else {
+{	
+	if (status == "flying")
 		return true;
-	}
-
+	else
+		return false;
 }
 
 double Projectile::getAltitude()

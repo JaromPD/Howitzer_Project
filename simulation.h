@@ -14,7 +14,7 @@ class Simulation
 		void reset();
 		void fire();
 		void display();
-		void advance() { simTime += interval; };
+		void advance();
 		void input(const Interface* pUI);
 		void setInterval(double interval) { this->interval = interval; }
 		void setMuzzleVelocity(Velocity velocity); // velocity may be type double instead.
