@@ -114,7 +114,7 @@ void Projectile::advance(double interval)
 	// ADD IT TO THE BACK OF THE FLIGHT PATH
 	flightPath.push_back(pvt);
 	
-	cout << "Advanced" << endl;
+	cout << "Advanced" << endl << endl;
 }
 
 void Projectile::draw(ogstream& gout)
