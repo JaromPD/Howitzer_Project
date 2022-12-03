@@ -5,6 +5,12 @@
 #include <math.h>
 using namespace std;
 
+double getArea(double r)
+{
+	double a;
+	return a = M_PI * pow(r, 2);
+}
+
 double getTotalComponent(double x, double y)
 {
 	double total;
@@ -157,9 +163,9 @@ double dragFromSpeed(double speed, double altitude)
 	return drag;
 }
 
-double forceFromDrag(double density, double dragCoefficient, double radius, double speed)
+double forceFromDrag(double p, double c, double a, double v)
 {
-	double d = (0.5) * dragCoefficient * density * pow(speed, 2) * (M_PI * pow(radius, 2));
+	double d = (0.5) * c * p * pow(v, 2) * a;
 	return d;
 }
 

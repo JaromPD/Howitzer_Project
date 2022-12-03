@@ -26,7 +26,7 @@ void Simulation::reset()
 
 void Simulation::fire()
 {
-	cout << "***" << howitzer.getMuzzleVelocity().getSpeed() << "***";
+	cout << "***" << howitzer.getMuzzleVelocity().getSpeed() << "***" << endl;;
 	projectile.fire(howitzer.getPosition(), simTime, howitzer.getMuzzleVelocity().getDirection(), howitzer.getMuzzleVelocity());
 }
 

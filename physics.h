@@ -1,6 +1,8 @@
 #include <vector>
 using namespace std;
 
+double getArea(double r);
+
 double getTotalComponent(double x, double y);
 double getVerticalComponent(double total, double angleRadians);
 double getHorizontalComponent(double total, double angleRadians);

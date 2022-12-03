@@ -2,10 +2,12 @@
 #include "position.h"
 #include "velocity.h"
 #include "ground.h"
+#include <iostream>
+using namespace std;
 
 Projectile::Projectile() :
 	mass(46.7), // Default mass of a M795 155mm shell.
-	radius(154.89 / 2), // Default radius of a M795 155mm shell.
+	radius(.15489 / 2), // Default radius of a M795 155mm shell.
 	status("live")
 {
 	// Default constructor
@@ -38,7 +40,7 @@ void Projectile::fire(Position pos, double time, Direction angle, Velocity vel)
 		flightPath[i].p.setPixelsY(pos.getPixelsY());
 		flightPath[i].v.setDirection(angle);
 		flightPath[i].v.setDxDy(vel.getDX(), vel.getDY());
-		cout << vel.getDX() << " | " << vel.getDY();
+		cout << vel.getDX() << " | " << vel.getDY() << endl;
 	}
 
 }
@@ -48,7 +50,7 @@ void Projectile::advance(double interval)
 
 	// All of the pvts are updated with physics.
 	// (This makes them move pos)
-
+	/*
 	for (int i = 0; i < 1; i++)
 	{
 		Velocity currVel = flightPath[i].v;
@@ -63,26 +65,39 @@ void Projectile::advance(double interval)
 		flightPath[i].p.setPixelsY(y);
 		flightPath[i].p.setPixelsX(x);
 	}
-
+	*/
 	/*******************
 	 * WORK IN PROGRESS	
 	 *******************/
 	
-	/*
+	
 	pvt pvt = flightPath.back();
+	
+	cout << "Pos: (" << pvt.p.getPixelsX() << ", " << pvt.p.getPixelsY() << ") " << " Vel: " << pvt.v.getDX() << " | " << pvt.v.getDY() << endl;
+	
 	double speed = pvt.v.getSpeed();
 	double altitude = pvt.p.getMetersY();
 
 	// MODIFY VELOCITY TO HANDLE WIND RESISTANCE
 	double density = densityFromAltitude(altitude);
 	double dragCoefficient = dragFromSpeed(speed, altitude);
-	double windResistance = forceFromDrag(density, dragCoefficient, radius, speed);
+	double surfaceArea = getArea(radius);
+	
+	cout << "Speed: " << speed << endl;
+	cout << "Density" << density << endl;
+	cout << "dragCoefficient: " << dragCoefficient << endl;
+	cout << "SurfaceArea: " << surfaceArea << endl;
+	
+	double windResistance = forceFromDrag(density, dragCoefficient, surfaceArea, speed);
 	double accelerationDrag = accelerationFromForce(windResistance, mass);
 	Velocity velocityWind(velocityFromAcceleration(accelerationDrag, interval), pvt.v.getDirection());
 	
 	velocityWind.reverse(); // Needs reversed since wind is resisting the projectile.
 	pvt.v += velocityWind;
 	
+	cout << "Wind Resistance" << windResistance << endl;
+	cout << "Wind Velo: " << velocityWind.getDX() << " | " << velocityWind.getDY() << endl;
+
 	// MODIFY VELOCITY TO HANDLE GRAVITY
 	double accelerationGravity = gravityFromAltitude(altitude);
 	Direction directionGravity;
@@ -90,13 +105,16 @@ void Projectile::advance(double interval)
 	Velocity velocityGravity(velocityFromAcceleration(accelerationGravity, interval), directionGravity);
 	pvt.v += velocityGravity;
 	
+	cout << "Gravity Velo: " << velocityGravity.getDX() << " | " << velocityGravity.getDY() << endl;
+	
 	// INERTIA
 	pvt.p.addMetersX(velocityFromAcceleration(pvt.v.getDX(), interval));
 	pvt.p.addMetersY(velocityFromAcceleration(pvt.v.getDY(), interval));
 
 	// ADD IT TO THE BACK OF THE FLIGHT PATH
 	flightPath.push_back(pvt);
-	*/
+	
+	cout << "Advanced" << endl;
 }
 
 void Projectile::draw(ogstream& gout)

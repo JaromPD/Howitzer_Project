@@ -1,12 +1,10 @@
 #include "howitzer.h"
 
-Howitzer::Howitzer() : muzzleVelocity(1) //Placeholder
+Howitzer::Howitzer() : muzzleVelocity(827) //Placeholder
 {
 	/* Position sets a random X coordinate as X.*/
 	generatePosition(500);
 	elevation.setDegrees(0); // Defaults to 0.
-	
-	cout << muzzleVelocity << endl;
 	
 }
 
