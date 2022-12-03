@@ -84,7 +84,7 @@ void Projectile::advance(double interval)
 	double surfaceArea = getArea(radius);
 	
 	cout << "Speed: " << speed << endl;
-	cout << "Density" << density << endl;
+	cout << "Density: " << density << endl;
 	cout << "dragCoefficient: " << dragCoefficient << endl;
 	cout << "SurfaceArea: " << surfaceArea << endl;
 	
@@ -95,7 +95,7 @@ void Projectile::advance(double interval)
 	velocityWind.reverse(); // Needs reversed since wind is resisting the projectile.
 	pvt.v += velocityWind;
 	
-	cout << "Wind Resistance" << windResistance << endl;
+	cout << "Wind Resistance: " << windResistance << endl;
 	cout << "Wind Velo: " << velocityWind.getDX() << " | " << velocityWind.getDY() << endl;
 
 	// MODIFY VELOCITY TO HANDLE GRAVITY
@@ -120,11 +120,13 @@ void Projectile::advance(double interval)
 void Projectile::draw(ogstream& gout)
 {
 	// All pvts are displayed.
-
+	gout.drawProjectile(flightPath.back().p, 0);
+	/*
 	for (int i = 0; i < 1; i++)
 	{
 		gout.drawProjectile(flightPath[i].p, 0.5 * (double)i);
 	}
+	*/
 }
 
 bool Projectile::flying()
