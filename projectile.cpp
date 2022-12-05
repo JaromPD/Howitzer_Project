@@ -8,7 +8,7 @@ using namespace std;
 Projectile::Projectile() :
 	mass(46.7), // Default mass of a M795 155mm shell.
 	radius(.15489 / 2), // Default radius of a M795 155mm shell.
-	status("live")
+	status("grounded")
 {
 	// Default constructor
 	// Make the list of 20 pvts.
@@ -25,23 +25,30 @@ Projectile::Projectile() :
 
 void Projectile::reset()
 {
-
+	for (int i = 0; i < 1; i++)
+	{
+		pvt pvt;
+		pvt.p.setPixelsX((double)i * 2.0);
+		pvt.p.setPixelsY(700 / 1.5);
+		flightPath.push_back(pvt);
+	}
 }
 
 void Projectile::fire(Position pos, double time, Direction angle, Velocity vel)
 {
+
+	
 	status = "flying";
 
 	// Initial conditions are set.
 
-	for (int i = 0; i < 1; i++)
-	{
-		flightPath[i].p.setPixelsX(pos.getPixelsX());
-		flightPath[i].p.setPixelsY(pos.getPixelsY());
-		flightPath[i].v.setDirection(angle);
-		flightPath[i].v.setDxDy(vel.getDX(), vel.getDY());
-		cout << vel.getDX() << " | " << vel.getDY() << endl;
-	}
+
+	flightPath.back().p.setPixelsX(pos.getPixelsX());
+	flightPath.back().p.setPixelsY(pos.getPixelsY());
+	flightPath.back().v.setDirection(angle);
+	flightPath.back().v.setDxDy(vel.getDX(), vel.getDY());
+	cout << vel.getDX() << " | " << vel.getDY() << endl;
+	
 
 }
 
@@ -129,6 +136,12 @@ void Projectile::draw(ogstream& gout)
 	*/
 }
 
+void Projectile::groundProjectile()
+{
+	// The projectile is grounded.
+	status = "grounded";
+}
+
 bool Projectile::flying()
 {	
 	if (status == "flying")
@@ -144,8 +157,7 @@ double Projectile::getAltitude()
 
 Position Projectile::getPosition()
 {
-	Position pt;  // Placeholder
-	return pt; // Placeholder
+	return flightPath.back().p;
 }
 
 double Projectile::getFlightTime()
@@ -160,7 +172,7 @@ double Projectile::getFlightDistance()
 
 double Projectile::getSpeed()
 {
-	return 0.00; // Placeholder
+	return flightPath.back().v.getSpeed(); // Placeholder
 }
 
 double Projectile::getCurrentTime()

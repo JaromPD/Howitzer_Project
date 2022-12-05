@@ -15,6 +15,7 @@ class Projectile
 		void fire(Position pos, double time, Direction angle, Velocity vel);
 		void advance(double time);
 		void draw(ogstream& gout);
+		void groundProjectile();
 		bool flying();
 		double getAltitude();
 		Position getPosition();
@@ -22,6 +23,7 @@ class Projectile
 		double getFlightDistance();
 		double getSpeed();
 		double getCurrentTime();
+		string getStatus() { return status; }
 		void setMass(double mass) { this->mass = mass; };
 		void setRadius(double radius) { this->radius = radius; };
 

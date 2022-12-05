@@ -5,17 +5,30 @@ using namespace std;
 Simulation::Simulation(Position ptUpperRight) :
 	ptUpperRight(ptUpperRight),
 	ground(ptUpperRight),
-	simTime(0.0)
+	simTime(0.0),
+	stageCount(0)
 {
 	ground.reset(howitzer.getPosition());
 }
 
 void Simulation::advance()
 {
+	cout << "[" << projectile.getPosition().getPixelsX() << " | " << projectile.getPosition().getPixelsY() << "]" << endl;
+	cout << "ELEVATION: " << ground.getElevationMeters(projectile.getPosition()) << endl;
 	simTime += interval;
 	if (projectile.flying())
 	{
 		projectile.advance(interval);
+		if (hitTarget())
+		{
+			projectile.groundProjectile();
+			ground.reset(howitzer.getPosition());
+			stageCount++;
+		}
+		else if (projectile.getPosition().getMetersY() <= ground.getElevationMeters(projectile.getPosition()))
+		{
+			projectile.groundProjectile();
+		}
 	}
 }
 
@@ -27,16 +40,18 @@ void Simulation::reset()
 void Simulation::fire()
 {
 	cout << "***" << howitzer.getMuzzleVelocity().getSpeed() << "***" << endl;;
-	projectile.fire(howitzer.getPosition(), simTime, howitzer.getMuzzleVelocity().getDirection(), howitzer.getMuzzleVelocity());
+	if (projectile.getStatus() == "grounded")
+	{
+		projectile.fire(howitzer.getPosition(), simTime, howitzer.getMuzzleVelocity().getDirection(), howitzer.getMuzzleVelocity());
+	}
 }
 
 void Simulation::display()
 {
 	ogstream gout(Position(10.0, ptUpperRight.getPixelsY() - 20.0));
 
-	ground.draw(gout);
 	howitzer.draw(gout, simTime);
-	
+	ground.draw(gout);
 	if (projectile.flying())
 	{
 		projectile.draw(gout);
@@ -44,8 +59,50 @@ void Simulation::display()
 
 	gout.setf(ios::fixed | ios::showpoint);
 	gout.precision(1);
-	gout << "Time since the bullet was fired: "
-		<< simTime << "s\n";
+
+	// Display Howitzer status
+	gout << "Howitzer Status: ";
+	if (projectile.getStatus() == "flying")
+		gout << "Reloading...";
+	else
+		gout << "Ready to Fire";
+	gout << endl;
+
+	// Display altitude.
+	if (projectile.getStatus() == "flying")
+	{
+		gout << "Alt: ";
+		gout << projectile.getPosition().getMetersY() - ground.getElevationMeters(projectile.getPosition()) << endl;
+	}
+
+	// Display Speed
+	if (projectile.getStatus() == "flying")
+	{
+		gout << "Speed: ";
+		gout << projectile.getSpeed() << endl;
+	}
+
+	// Display Distance
+	if (projectile.getStatus() == "flying")
+	{
+		gout << "Distance: ";
+		gout << projectile.getPosition().getMetersX() - howitzer.getPosition().getMetersX() << endl;
+	}
+
+	// DisplayHangtime
+	if (projectile.getStatus() == "flying")
+	{
+		gout << "Hangtime: ";
+		gout << simTime << endl;
+	}
+
+	if (projectile.getStatus() == "grounded")
+	{
+		gout << "Angle: ";
+		gout << howitzer.getElevation().getDegrees() << endl;
+	}
+
+	gout << "Stage: " << stageCount << "\n";
 }
 
 void Simulation::input(const Interface* pUI)
@@ -56,13 +113,10 @@ void Simulation::input(const Interface* pUI)
 	if (pUI->isLeft())
 		howitzer.rotate(-0.05);
 
-	/*
-	// move by a little
-	if (pUI->isUp() a)
-		pDemo->angle += (pDemo->angle >= 0 ? -0.003 : 0.003);
+	if (pUI->isUp())
+		howitzer.rotate(0.003);
 	if (pUI->isDown())
-		pDemo->angle += (pDemo->angle >= 0 ? 0.003 : -0.003);
-	*/
+		howitzer.rotate(-0.003);
 
 	// fire that gun
 	if (pUI->isSpace())
@@ -84,7 +138,18 @@ void Simulation::setDiameter(double diameter)
 
 bool Simulation::hitTarget()
 {
-	return true; // Placeholder
+	if ((ground.getTarget().getPixelsX() -10 <= projectile.getPosition().getPixelsX() 
+		and 
+		projectile.getPosition().getPixelsX() <= ground.getTarget().getPixelsX() + 10)
+		and
+		(ground.getTarget().getPixelsY() -10 <= projectile.getPosition().getPixelsY() 
+		and 
+		projectile.getPosition().getPixelsY() <= ground.getTarget().getPixelsY() + 10))
+	{
+		return true;
+	}
+	else
+		return false;
 }
 
 double Simulation::getHeightMeters()

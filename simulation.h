@@ -32,6 +32,7 @@ class Simulation
 		double simTime;
 		Ground ground;
 		Position ptUpperRight; // May not be neccesary. 
+		int stageCount;
 
 		// Private Methods
 

@@ -12,6 +12,7 @@ class Howitzer
 		Position& getPosition();
 		void generatePosition(int size);
 		Velocity getMuzzleVelocity();
+		Direction getElevation() { return elevation; };
 		void setMuzzleVelocity(Velocity velocity);
 		void rotate(double radians);
 		void raise(double radians);
