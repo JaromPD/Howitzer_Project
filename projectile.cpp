@@ -13,11 +13,11 @@ Projectile::Projectile() :
 	// Default constructor
 	// Make the list of 20 pvts.
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		pvt pvt;
-		pvt.p.setPixelsX((double)i * 2.0);
-		pvt.p.setPixelsY(700 / 1.5);
+		//pvt.p.setPixelsX((double)i * 2.0);
+		//pvt.p.setPixelsY(700 / 1.5);
 		flightPath.push_back(pvt);
 	}
 
@@ -25,11 +25,11 @@ Projectile::Projectile() :
 
 void Projectile::reset()
 {
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		pvt pvt;
-		pvt.p.setPixelsX((double)i * 2.0);
-		pvt.p.setPixelsY(700 / 1.5);
+		//pvt.p.setPixelsX((double)i * 2.0);
+		//pvt.p.setPixelsY(700 / 1.5);
 		flightPath.push_back(pvt);
 	}
 }
@@ -127,13 +127,13 @@ void Projectile::advance(double interval)
 void Projectile::draw(ogstream& gout)
 {
 	// All pvts are displayed.
-	gout.drawProjectile(flightPath.back().p, 0);
-	/*
-	for (int i = 0; i < 1; i++)
+	//gout.drawProjectile(flightPath.back().p, 0);
+	
+	for (int i = 0; i < 20; i++)
 	{
 		gout.drawProjectile(flightPath[i].p, 0.5 * (double)i);
 	}
-	*/
+	
 }
 
 void Projectile::groundProjectile()
