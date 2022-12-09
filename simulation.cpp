@@ -21,9 +21,7 @@ void Simulation::advance()
 		projectile.advance(interval);
 		if (hitTarget())
 		{
-			projectile.groundProjectile();
-			ground.reset(howitzer.getPosition());
-			stageCount++;
+			reset();
 		}
 		else if (projectile.getPosition().getMetersY() <= ground.getElevationMeters(projectile.getPosition()))
 		{
@@ -34,7 +32,9 @@ void Simulation::advance()
 
 void Simulation::reset()
 {
-
+	projectile.groundProjectile();
+	ground.reset(howitzer.getPosition());
+	stageCount++;
 }
 
 void Simulation::fire()
@@ -42,6 +42,7 @@ void Simulation::fire()
 	cout << "***" << howitzer.getMuzzleVelocity().getSpeed() << "***" << endl;;
 	if (projectile.getStatus() == "grounded")
 	{
+		projectile.reset();
 		projectile.fire(howitzer.getPosition(), simTime, howitzer.getMuzzleVelocity().getDirection(), howitzer.getMuzzleVelocity());
 	}
 }
@@ -57,6 +58,7 @@ void Simulation::display()
 		projectile.draw(gout);
 	}
 
+	gout.setPosition(Position(3000, 18000));
 	gout.setf(ios::fixed | ios::showpoint);
 	gout.precision(1);
 

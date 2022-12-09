@@ -28,9 +28,9 @@ void Projectile::reset()
 	for (int i = 0; i < 20; i++)
 	{
 		pvt pvt;
-		//pvt.p.setPixelsX((double)i * 2.0);
-		//pvt.p.setPixelsY(700 / 1.5);
-		flightPath.push_back(pvt);
+		pvt.p.setPixelsX(1);
+		pvt.p.setPixelsY(1);
+		flightPath.back() = pvt;
 	}
 }
 
@@ -119,7 +119,7 @@ void Projectile::advance(double interval)
 	pvt.p.addMetersY(velocityFromAcceleration(pvt.v.getDY(), interval));
 
 	// ADD IT TO THE BACK OF THE FLIGHT PATH
-	flightPath.push_back(pvt);
+	flightPath.back() = pvt;
 	
 	cout << "Advanced" << endl << endl;
 }
@@ -129,9 +129,10 @@ void Projectile::draw(ogstream& gout)
 	// All pvts are displayed.
 	//gout.drawProjectile(flightPath.back().p, 0);
 	
-	for (int i = 0; i < 20; i++)
+	for (int i = 1; i < 20; i++)
 	{
-		gout.drawProjectile(flightPath[i].p, 0.5 * (double)i);
+		flightPath[i - 1].p = flightPath[i].p;
+		gout.drawProjectile(flightPath[i].p, 4 - (0.2 * (double)i));
 	}
 	
 }
